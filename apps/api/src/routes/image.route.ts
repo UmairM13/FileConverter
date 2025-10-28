@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { env } from "../config/env";
-import { convertImageController } from "../controllers/image.controller";
+import { convertImageController, resizeImageController, compressImageController, imageInfoController } from "../controllers/image.controller";
 
 const router = Router();
 
@@ -13,5 +13,8 @@ const upload = multer({
 });
 
 router.post("/convert", upload.single("file"), convertImageController);
+router.post("/resize", upload.single("file"), resizeImageController);
+router.post("/compress", upload.single("file"), compressImageController);
+router.post("/info", upload.single("file"), imageInfoController);
 
 export default router;
