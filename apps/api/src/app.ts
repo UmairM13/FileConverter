@@ -15,6 +15,7 @@ if (!fs.existsSync(env.TMP_DIR)) fs.mkdirSync(env.TMP_DIR, { recursive: true });
 
 // core middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(...securityMiddleware);
 
 // routes
