@@ -1,30 +1,50 @@
 import { Link } from "react-router-dom";
-import { IMAGE_TOOLS, PDF_TOOLS, type ToolConfig } from "../tools";
 
-function ToolCard({ tool, category }: { tool: ToolConfig; category: string }) {
+type Tool = { icon: string; title: string; description: string; path: string };
+
+const IMAGE_TOOLS: Tool[] = [
+  { icon: "🔄", title: "Convert Image",   path: "/image/convert",        description: "Convert between JPEG, PNG, WebP, and AVIF." },
+  { icon: "↔️", title: "Resize Image",    path: "/image/resize",         description: "Resize to exact dimensions while preserving quality." },
+  { icon: "📦", title: "Compress Image",  path: "/image/compress",       description: "Reduce file size without visible quality loss." },
+  { icon: "⬛", title: "Grayscale",       path: "/image/grayscale",      description: "Convert any image to black and white instantly." },
+  { icon: "🔏", title: "Watermark Image", path: "/image/watermark",      description: "Add a custom text watermark to your images." },
+  { icon: "🧹", title: "Strip Metadata",  path: "/image/strip-metadata", description: "Remove EXIF data from images for privacy." },
+  { icon: "📄", title: "Images to PDF",   path: "/image/to-pdf",         description: "Combine multiple images into a single PDF." },
+  { icon: "ℹ️", title: "Image Info",      path: "/image/info",           description: "View dimensions, format, colour space, and more." },
+];
+
+const PDF_TOOLS: Tool[] = [
+  { icon: "🔗", title: "Merge PDFs",      path: "/pdf/merge",         description: "Combine multiple PDF files into one document." },
+  { icon: "📋", title: "PDF Metadata",    path: "/pdf/metadata",      description: "View title, author, page count, and creation date." },
+  { icon: "🔃", title: "Rotate Pages",    path: "/pdf/rotate-pages",  description: "Rotate specific pages or the entire PDF." },
+  { icon: "🔒", title: "Protect PDF",     path: "/pdf/protect",       description: "Password-protect a PDF to restrict access." },
+  { icon: "🔏", title: "Watermark PDF",   path: "/pdf/watermark",     description: "Add a diagonal text watermark across every page." },
+];
+
+function ToolCard({ tool }: { tool: Tool }) {
   return (
-    <Link
-      to={`/${category}/${tool.id}`}
-      style={{ textDecoration: "none" }}
-    >
-      <div style={{
-        padding: "1.25rem",
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderRadius: "12px",
-        cursor: "pointer",
-        transition: "all 0.2s ease",
-        height: "100%",
-      }}
+    <Link to={tool.path} style={{ textDecoration: "none" }}>
+      <div
+        style={{
+          padding: "1.25rem",
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: "12px",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          height: "100%",
+        }}
         onMouseEnter={e => {
-          (e.currentTarget as HTMLDivElement).style.borderColor = "var(--accent)";
-          (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
-          (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 24px rgba(74,222,128,0.08)";
+          const el = e.currentTarget as HTMLDivElement;
+          el.style.borderColor = "var(--accent)";
+          el.style.transform = "translateY(-2px)";
+          el.style.boxShadow = "0 8px 24px rgba(74,222,128,0.08)";
         }}
         onMouseLeave={e => {
-          (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)";
-          (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-          (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+          const el = e.currentTarget as HTMLDivElement;
+          el.style.borderColor = "var(--border)";
+          el.style.transform = "translateY(0)";
+          el.style.boxShadow = "none";
         }}
       >
         <div style={{ fontSize: "1.5rem", marginBottom: "10px" }}>{tool.icon}</div>
@@ -39,18 +59,14 @@ function ToolCard({ tool, category }: { tool: ToolConfig; category: string }) {
   );
 }
 
-function Section({ title, tools, category }: { title: string; tools: ToolConfig[]; category: string }) {
+function Section({ title, tools }: { title: string; tools: Tool[] }) {
   return (
     <section style={{ marginBottom: "3.5rem" }}>
       <h2 className="syne" style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
         {title}
       </h2>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-        gap: "12px",
-      }}>
-        {tools.map(t => <ToolCard key={t.id} tool={t} category={category} />)}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "12px" }}>
+        {tools.map(t => <ToolCard key={t.path} tool={t} />)}
       </div>
     </section>
   );
@@ -59,7 +75,6 @@ function Section({ title, tools, category }: { title: string; tools: ToolConfig[
 export default function Home() {
   return (
     <div>
-      {/* Hero */}
       <div style={{
         padding: "5rem 2rem 4rem",
         textAlign: "center",
@@ -83,25 +98,17 @@ export default function Home() {
         }}>
           Free · No account needed · Files never stored
         </div>
-        <h1 className="syne" style={{
-          fontSize: "clamp(2.5rem, 6vw, 4rem)",
-          fontWeight: 800,
-          margin: "0 0 1rem",
-          letterSpacing: "-0.04em",
-          lineHeight: 1.1,
-        }}>
-          File 
-          <span style={{ color: "var(--accent)" }}> Tools.</span>
+        <h1 className="syne" style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", fontWeight: 800, margin: "0 0 1rem", letterSpacing: "-0.04em", lineHeight: 1.1 }}>
+          File <span style={{ color: "var(--accent)" }}>Tools.</span>
         </h1>
         <p style={{ fontSize: "1.05rem", color: "var(--muted)", maxWidth: "420px", margin: "0 auto", lineHeight: 1.7 }}>
           Convert, compress, watermark, and transform images and PDFs.
         </p>
       </div>
 
-      {/* Tools */}
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "0 1.5rem" }}>
-        <Section title="Image Tools" tools={IMAGE_TOOLS} category="image" />
-        <Section title="PDF Tools"   tools={PDF_TOOLS}   category="pdf"   />
+        <Section title="Image Tools" tools={IMAGE_TOOLS} />
+        <Section title="PDF Tools"   tools={PDF_TOOLS}   />
       </div>
     </div>
   );
