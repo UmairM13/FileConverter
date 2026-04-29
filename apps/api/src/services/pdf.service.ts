@@ -53,12 +53,10 @@ export async function protectPdfService(
   opts: { userPassword: string; ownerPassword?: string }
 ): Promise<Buffer> {
   const doc = await pdfLib.PDFDocument.load(input);
-  const saveOptions: any = {
-    userPassword: opts.userPassword,
-    ownerPassword: opts.ownerPassword ?? opts.userPassword,
-  };
-
-  const bytes = await doc.save(saveOptions);
+  const bytes = await doc.save({
+  userPassword: opts.userPassword,
+  ownerPassword: opts.ownerPassword ?? opts.userPassword,
+    } as pdfLib.SaveOptions);
   return Buffer.from(bytes);
 }
 
