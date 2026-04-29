@@ -53,7 +53,7 @@ export async function convertImageService(
       mime = "image/png";
       ext = "png";
       pipeline = pipeline.png({
-        quality: quality ?? 82,        // affects palette compression
+        quality: quality ?? 82,        
         compressionLevel: 9,
         adaptiveFiltering: true,
       });
@@ -70,7 +70,7 @@ export async function convertImageService(
       mime = "image/avif";
       ext = "avif";
       pipeline = pipeline.avif({
-        quality: quality ?? 50,        // AVIF's scale is different; 45–60 is often good
+        quality: quality ?? 50,        
         effort: 4,
       });
       break;
@@ -148,6 +148,119 @@ export async function compressImageService(
   return { buffer, mime, ext };
 }
 
+// Grayscale
+export async function grayscaleImageService(input: Buffer): Promise<{buffer: Buffer; mime: string; ext: string}> {
+
+  const meta = await sharp(input).metadata();
+  const origFmt = (meta.format as OutputFormat | undefined) ?? "jpeg";
+  const { mime, ext } = formatToMimeExt(origFmt);
+
+  const buffer = await sharp(input).rotate().grayscale().toFormat(origFmt).toBuffer();
+
+    return { buffer, mime, ext };
+}
+
+// Strip metadata
+
+export async function stripMetadataService(input: Buffer): Promise<{buffer: Buffer; mime: string; ext: string}> { 
+  const meta = await sharp(input).metadata();
+  const origFmt = (meta.format as OutputFormat | undefined) ?? "jpeg";
+  const { mime, ext } = formatToMimeExt(origFmt);
+
+  const buffer = await sharp(input).rotate().toFormat(origFmt).toBuffer();
+
+  return { buffer, mime, ext };
+}
+
+// Watermark 
+
+const gravityMap: Record<string, string> = {
+  "center":       "centre",
+  "top-left":     "northwest",
+  "top-right":    "northeast",
+  "bottom-left":  "southwest",
+  "bottom-right": "southeast",
+}
+
+
+export async function watermarkImageService(
+  input: Buffer,
+  opts: {
+    text: string;
+    position?: string;   // center | top-left | top-right | bottom-left | bottom-right
+    opacity?: number;    // 0..1
+    fontSize?: number;   // px
+    color?: string;     // hex without #, e.g. "ffffff"
+  }
+): Promise<{ buffer: Buffer; mime: string; ext: string }> {
+  const { text, position = "center", opacity = 0.4, fontSize = 48, color = "ffffff" } = opts;
+  const meta = await sharp(input).metadata();
+  const origFmt = (meta.format as OutputFormat | undefined) ?? "jpeg";
+  const { mime, ext } = formatToMimeExt(origFmt);
+  const w = meta.width ?? 800;
+  const h = meta.height ?? 600;
+
+  // Build SVG overlay sized to full image
+  const svgOverlay = Buffer.from(
+    `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
+      <text
+        x="50%" y="50%"
+        font-size="${fontSize}"
+        fill="#${color}"
+        fill-opacity="${opacity}"
+        font-family="sans-serif"
+        font-weight="bold"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        transform="rotate(-30, ${w / 2}, ${h / 2})"
+      >${text}</text>
+    </svg>`
+  );
+
+  const gravity = (gravityMap[position] ?? "centre") as sharp.Gravity;
+
+  const buffer = await sharp(input)
+    .rotate()
+    .composite([{ input: svgOverlay, gravity }])
+    .toFormat(origFmt)
+    .toBuffer();
+
+  return { buffer, mime, ext };
+}
+
+
+// Images to PDF
+
+import * as pdfLib from "pdf-lib";
+
+export async function imagesToPdfService(
+  inputs: Buffer[]
+): Promise<Buffer> {
+  const pdfDoc = await pdfLib.PDFDocument.create();
+
+  for (const input of inputs) {
+    // Normalise to PNG — pdf-lib supports JPEG + PNG natively
+    const meta = await sharp(input).metadata();
+    let imgBuffer: Buffer;
+    let embedFn: "embedJpg" | "embedPng";
+
+    if (meta.format === "jpeg") {
+      imgBuffer = await sharp(input).rotate().jpeg({ quality: 90 }).toBuffer();
+      embedFn = "embedJpg";
+    } else {
+      imgBuffer = await sharp(input).rotate().png().toBuffer();
+      embedFn = "embedPng";
+    }
+
+    const embedded = await pdfDoc[embedFn](imgBuffer);
+    const { width, height } = embedded.scale(1);
+    const page = pdfDoc.addPage([width, height]);
+    page.drawImage(embedded, { x: 0, y: 0, width, height });
+  }
+
+  const bytes = await pdfDoc.save();
+  return Buffer.from(bytes);
+}
 
 export async function imageInfoService(input: Buffer, uploadSize?: number){
   const meta = await sharp(input).metadata();

@@ -3,6 +3,8 @@ import { z } from "zod";
 import { convertImageService, imageInfoService } from "../services/image.service";
 import { resizeImageService } from "../services/image.service";
 import { compressImageService } from "../services/image.service";
+import { grayscaleImageService, stripMetadataService, watermarkImageService, imagesToPdfService } from "../services/image.service";
+
 
 
 const querySchema = z.object({
@@ -117,5 +119,59 @@ export async function imageInfoController(req: Request, res: Response, next: Nex
     if (!req.file?.buffer) return res.status(400).json({ error: "No file uploaded. Use 'file'." });
     const info = await imageInfoService(req.file.buffer, req.file.size);
     return res.status(200).json(info);
+  } catch (err) { next(err); }
+}
+
+const watermarkSchema = z.object({
+  text: z.string().min(1).max(100),
+  position: z.enum(["center", "top-left", "top-right", "bottom-left", "bottom-right"]).default("center").optional(),
+  opacity: z.coerce.number().min(0).max(1).optional(),
+  fontSize: z.coerce.number().int().positive().max(500).optional(),
+  color: z.string().regex(/^[0-9a-fA-F]{6}$/).optional(), // hex color without #
+});
+
+export async function grayscaleImageController(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.file?.buffer) return res.status(400).json({ error: "No file uploaded." });
+    const { buffer, mime, ext } = await grayscaleImageService(req.file.buffer);
+    const name = (req.file.originalname || "image").replace(/\.[^.]+$/, "");
+    res.setHeader("Content-Type", mime);
+    res.setHeader("Content-Disposition", `attachment; filename="${name}_grayscale.${ext}"`);
+    return res.status(200).send(buffer);
+  } catch (err) { next(err); }
+}
+
+export async function stripMetadataController(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.file?.buffer) return res.status(400).json({ error: "No file uploaded." });
+    const { buffer, mime, ext } = await stripMetadataService(req.file.buffer);
+    const name = (req.file.originalname || "image").replace(/\.[^.]+$/, "");
+    res.setHeader("Content-Type", mime);
+    res.setHeader("Content-Disposition", `attachment; filename="${name}_clean.${ext}"`);
+    return res.status(200).send(buffer);
+  } catch (err) { next(err); }
+}
+
+export async function watermarkImageController(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.file?.buffer) return res.status(400).json({ error: "No file uploaded." });
+    const opts = watermarkSchema.parse({ ...req.query, ...req.body });
+    const { buffer, mime, ext } = await watermarkImageService(req.file.buffer, opts);
+    const name = (req.file.originalname || "image").replace(/\.[^.]+$/, "");
+    res.setHeader("Content-Type", mime);
+    res.setHeader("Content-Disposition", `attachment; filename="${name}_watermarked.${ext}"`);
+    return res.status(200).send(buffer);
+  } catch (err) { next(err); }
+}
+
+export async function imagesToPdfController(req: Request, res: Response, next: NextFunction) {
+  try {
+    const files = req.files as Express.Multer.File[];
+    if (!files?.length) return res.status(400).json({ error: "No files uploaded. Use 'files' field." });
+    const buffers = files.map(f => f.buffer);
+    const pdfBuffer = await imagesToPdfService(buffers);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="images.pdf"`);
+    return res.status(200).send(pdfBuffer);
   } catch (err) { next(err); }
 }
