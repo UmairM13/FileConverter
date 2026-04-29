@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import Privacy from "./pages/Privacy";
 
 // Image pages
 import Convert      from "./pages/image/Convert";
@@ -24,6 +25,7 @@ export default function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/privacy" element={<Privacy />} />
 
         {/* Image */}
         <Route path="/image/convert"        element={<Convert />} />
