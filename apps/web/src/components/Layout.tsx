@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         fontSize: "0.8rem",
         color: "var(--muted)",
       }}>
-        FileKit — Free online file tools. No uploads stored. Built with ♥
+        FileKit -  Free online file tools. No uploads stored.
       </footer>
     </div>
   );
