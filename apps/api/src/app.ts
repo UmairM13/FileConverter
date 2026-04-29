@@ -27,13 +27,22 @@ app.use("/api/pdf", pdfRoute);
 // static (if you need to expose generated files later)
 // app.use("/downloads", express.static(path.resolve(env.TMP_DIR)));
 
+// basic startup log from the app layer
+logger.debug({ TMP_DIR: env.TMP_DIR, MAX_UPLOAD_MB: env.MAX_UPLOAD_MB }, "App configured");
+
+if (process.env.NODE_ENV === "production") {
+    const frontendDist = path.join(__dirname, "../web/dist");
+    app.use(express.static(frontendDist));
+    app.get("*splat", (_req, res) => {
+        res.sendFile(path.join(frontendDist, "index.html"));
+    });
+}
+
+
 // 404
 app.use((_req, res) => res.status(404).json({ error: "Not Found" }));
 
 // error handler
 app.use(errorHandler);
-
-// basic startup log from the app layer
-logger.debug({ TMP_DIR: env.TMP_DIR, MAX_UPLOAD_MB: env.MAX_UPLOAD_MB }, "App configured");
 
 export default app;
