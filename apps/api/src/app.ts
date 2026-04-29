@@ -7,6 +7,7 @@ import healthRoute from "./routes/health.route";
 import imageRoute from "./routes/image.route";
 import { env } from "./config/env";
 import { logger } from "./config/logger";
+import pdfRoute from "./routes/pdf.route";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(...securityMiddleware);
 // routes
 app.use("/health", healthRoute);
 app.use("/api/image", imageRoute);
+app.use("/api/pdf", pdfRoute);
 
 // static (if you need to expose generated files later)
 // app.use("/downloads", express.static(path.resolve(env.TMP_DIR)));
