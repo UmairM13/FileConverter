@@ -1,4 +1,8 @@
 import * as pdfLib from "pdf-lib";
+import qpdf from "node-qpdf2";
+import fs from "fs/promises";
+import os from "os";
+import path from "path";
 
 export async function mergePdfsService(inputs: Buffer[]): Promise<Buffer> {
   const mergedDoc = await pdfLib.PDFDocument.create();
@@ -52,13 +56,36 @@ export async function protectPdfService(
   input: Buffer,
   opts: { userPassword: string; ownerPassword?: string }
 ): Promise<Buffer> {
-  const doc = await pdfLib.PDFDocument.load(input);
-  const bytes = await doc.save({
-  userPassword: opts.userPassword,
-  ownerPassword: opts.ownerPassword ?? opts.userPassword,
-    } as pdfLib.SaveOptions);
-  return Buffer.from(bytes);
+  const tmpDir = os.tmpdir();
+  const inputPath  = path.join(tmpDir, `input-${Date.now()}.pdf`);
+  const outputPath = path.join(tmpDir, `output-${Date.now()}.pdf`);
+
+  try {
+    await fs.writeFile(inputPath, input);
+
+    await qpdf.encrypt({
+  input: inputPath,
+  output: outputPath,
+  keyLength: 256,
+  password: {
+    user: opts.userPassword,
+    owner: opts.ownerPassword ?? opts.userPassword,
+  },
+  restrictions: {
+    print: "none",
+    modify: "none",
+    extract: "n",
+    annotate: "n",
+  },
+} as any);
+
+    return await fs.readFile(outputPath);
+  } finally {
+    await fs.unlink(inputPath).catch(() => {});
+    await fs.unlink(outputPath).catch(() => {});
+  }
 }
+
 
 export async function watermarkPdfService(
   input: Buffer,
