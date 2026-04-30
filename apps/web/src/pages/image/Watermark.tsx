@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropZone from "../../components/DropZone";
 import PageHeader from "../../components/ui/PageHeader";
 import SubmitButton from "../../components/ui/SubmitButton";
@@ -67,3 +67,7 @@ export default function Watermark() {
     </div>
   );
 }
+
+useEffect(() => {
+  document.title = "Watermark Image Free Online - FileKit"; 
+} , []);

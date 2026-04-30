@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import DropZone from "../../components/DropZone";
 import PageHeader from "../../components/ui/PageHeader";
@@ -59,3 +59,7 @@ export default function Info() {
     </div>
   );
 }
+
+useEffect(() => {
+  document.title = "Get Image Info Free Online - FileKit";
+})

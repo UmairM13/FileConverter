@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropZone from "../../components/DropZone";
 import PageHeader from "../../components/ui/PageHeader";
 import SubmitButton from "../../components/ui/SubmitButton";
@@ -54,3 +54,7 @@ export default function PdfWatermark() {
     </div>
   );
 }
+
+useEffect(() => {
+  document.title = "Add Watermark PDFs Free Online - FileKit";
+}, []);
