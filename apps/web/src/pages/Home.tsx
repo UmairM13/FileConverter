@@ -74,6 +74,10 @@ function Section({ title, tools }: { title: string; tools: Tool[] }) {
 }
 
 export default function Home() {
+
+  useEffect(() => {
+    document.title = "FileKit - Free Online File Tools";
+  })
   return (
     <div>
       <div style={{
@@ -114,7 +118,3 @@ export default function Home() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "FileKit - Free Online File Tools";
-})
