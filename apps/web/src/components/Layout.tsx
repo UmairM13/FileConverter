@@ -48,7 +48,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         
 
         <Link to="/privacy" style={{ color: "var(--muted)", textDecoration: "underline" }}>
-        Privacy Policy 
+        Privacy Policy. &nbsp; 
+        </Link>
+        <Link to="https://buymeacoffee.com/filekitio" target="_blank" style={{ color: "var(--muted)", textDecoration: "underline" }}>
+        ☕ Buy me a coffee.
         </Link>
       </footer>
     </div>
