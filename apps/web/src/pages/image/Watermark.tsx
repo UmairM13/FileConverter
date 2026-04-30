@@ -25,6 +25,10 @@ export default function Watermark() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+  document.title = "Watermark Image Free Online - FileKit"; 
+} , []);
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload an image."); return; }
     if (!text.trim()) { setError("Please enter watermark text."); return; }
@@ -68,6 +72,3 @@ export default function Watermark() {
   );
 }
 
-useEffect(() => {
-  document.title = "Watermark Image Free Online - FileKit"; 
-} , []);

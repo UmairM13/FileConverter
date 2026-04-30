@@ -14,6 +14,10 @@ export default function StripMetadata() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+    document.title = "Strip Image Metadata Free Online - FileKit";
+  }, []);
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload an image."); return; }
     setLoading(true); setError(null);
@@ -34,7 +38,3 @@ export default function StripMetadata() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Strip Image Metadata Free Online - FileKit";
-}, []);

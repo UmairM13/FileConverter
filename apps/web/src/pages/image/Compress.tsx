@@ -16,6 +16,10 @@ export default function Compress() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+    document.title = "Compress Image Free Online - FileKit";
+  }, []);
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload an image."); return; }
     setLoading(true); setError(null);
@@ -43,7 +47,3 @@ export default function Compress() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Compress Image Free Online - FileKit";
-}, []);

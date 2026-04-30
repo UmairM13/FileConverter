@@ -27,6 +27,10 @@ export default function Metadata() {
   const [error, setError] = useState<string | null>(null);
   const [meta, setMeta] = useState<PdfMetadata | null>(null);
 
+  useEffect(() => {
+    document.title = "Get PDF Metadata Free Online - FileKit";
+  }, []);
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload a PDF."); return; }
     setLoading(true); setError(null);
@@ -64,7 +68,3 @@ export default function Metadata() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Get PDF Metadata Free Online - FileKit";
-}, []);

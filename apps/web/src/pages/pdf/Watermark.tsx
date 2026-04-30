@@ -18,6 +18,10 @@ export default function PdfWatermark() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+    document.title = "Add Watermark PDFs Free Online - FileKit";
+  }, []);
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload a PDF."); return; }
     setLoading(true); setError(null);
@@ -54,7 +58,3 @@ export default function PdfWatermark() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Add Watermark PDFs Free Online - FileKit";
-}, []);

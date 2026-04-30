@@ -17,6 +17,10 @@ export default function Protect() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+    document.title = "Protect PDF free online - FileKit";
+  }, []);
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload a PDF."); return; }
     setLoading(true); setError(null);
@@ -50,7 +54,3 @@ export default function Protect() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Protect PDF free online - FileKit";
-}, []);

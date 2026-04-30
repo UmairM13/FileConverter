@@ -25,6 +25,10 @@ export default function Info() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<ImageInfoType | null>(null);
 
+  useEffect(() => {
+    document.title = "Get Image Info Free Online - FileKit";
+  })
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload an image."); return; }
     setLoading(true); setError(null);
@@ -59,7 +63,3 @@ export default function Info() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Get Image Info Free Online - FileKit";
-})

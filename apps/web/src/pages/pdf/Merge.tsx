@@ -14,6 +14,10 @@ export default function Merge() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+    document.title = "Merge PDFs Free Online - FileKit";
+  }, []);
+
   const handleSubmit = async () => {
     setLoading(true); setError(null);
     try {
@@ -34,7 +38,3 @@ export default function Merge() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Merge PDFs Free Online - FileKit";
-}, []);

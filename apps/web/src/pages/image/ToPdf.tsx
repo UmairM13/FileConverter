@@ -14,6 +14,11 @@ export default function ToPdf() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+  document.title = "Convert Images to PDF Free Online - FileKit";
+}, []); 
+
+
   const handleSubmit = async () => {
     if (!files.length) { setError("Please upload at least one image."); return; }
     setLoading(true); setError(null);
@@ -35,6 +40,3 @@ export default function ToPdf() {
   );
 }
 
-useEffect(() => {
-  document.title = "Convert Images to PDF Free Online - FileKit";
-}, []); 

@@ -19,6 +19,10 @@ export default function RotatePages() {
   const [error, setError] = useState<string | null>(null);
   const { url, filename, setResult } = useDownload();
 
+  useEffect(() => {
+    document.title = "Rotate PDFs pages Free Online - FileKit";
+  }, []);
+
   const handleSubmit = async () => {
     if (!file) { setError("Please upload a PDF."); return; }
     setLoading(true); setError(null);
@@ -50,7 +54,3 @@ export default function RotatePages() {
     </div>
   );
 }
-
-useEffect(() => {
-  document.title = "Rotate PDFs pages Free Online - FileKit";
-}, []);
