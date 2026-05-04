@@ -9,6 +9,8 @@ import {
   watermarkPdfController,
 } from "../controllers/pdf.controller";
 
+import { pdfToTextController, pdfToWordController } from "../controllers/pdf.controller";
+
 const router = Router();
 
 const upload = multer({
@@ -21,6 +23,9 @@ const upload = multer({
     cb(null, true);
   },
 });
+
+router.post("/to-text", upload.single("file"), pdfToTextController);
+router.post("/to-word", upload.single("file"), pdfToWordController);
 
 router.post("/merge",        upload.array("files", 10), mergePdfsController);
 router.post("/metadata",     upload.single("file"),     pdfMetadataController);

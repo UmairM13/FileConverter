@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
+import { pdfToTextService } from "../services/pdf.service";
+import { pdfToWordService } from "../services/pdf.service";
 import {
   mergePdfsService,
   pdfMetadataService,
@@ -81,3 +83,23 @@ export async function watermarkPdfController(req: Request, res: Response, next: 
     return res.status(200).send(pdfBuffer);
   } catch (err) { next(err); }
 }
+
+
+export async function pdfToTextController(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.file?.buffer) return res.status(400).json({ error: "No file uploaded." });
+    const result = await pdfToTextService(req.file.buffer);
+    return res.status(200).json(result);
+  } catch (err) { next(err); }
+}
+
+export async function pdfToWordController(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.file?.buffer) return res.status(400).json({ error: "No file uploaded." });
+    const buffer = await pdfToWordService(req.file.buffer);
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+    res.setHeader("Content-Disposition", `attachment; filename="converted.docx"`);
+    return res.status(200).send(buffer);
+  } catch (err) { next(err); }
+}
+
