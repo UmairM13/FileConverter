@@ -20,6 +20,17 @@ const PDF_TOOLS: Tool[] = [
   { icon: "🔃", title: "Rotate Pages",    path: "/pdf/rotate-pages",  description: "Rotate specific pages or the entire PDF." },
   { icon: "🔒", title: "Protect PDF",     path: "/pdf/protect",       description: "Password-protect a PDF to restrict access." },
   { icon: "🔏", title: "Watermark PDF",   path: "/pdf/watermark",     description: "Add a diagonal text watermark across every page." },
+  { icon: "📝", title: "PDF to Text",     path: "/pdf/to-text",         description: "Extract all text content from a PDF." },
+  { icon: "📝", title: "PDF to Word", path: "/pdf/to-word", description: "Extract PDF text into a Word document." },
+];
+
+const DATA_TOOLS: Tool[] = [
+  { icon: "🧹", title: "JSON Formatter",  path: "/data/json-formatter", description: "Prettify and format JSON instantly." },
+  { icon: "⇄",  title: "JSON to CSV",     path: "/data/json-to-csv",    description: "Convert JSON arrays to CSV format." },
+  { icon: "⇄",  title: "CSV to JSON",     path: "/data/csv-to-json",    description: "Convert CSV files to JSON format." },
+  { icon: "⇄",  title: "JSON to XML",     path: "/data/json-to-xml",    description: "Convert JSON to XML format." },
+  { icon: "⇄",  title: "XML to JSON",     path: "/data/xml-to-json",    description: "Convert XML to JSON format." },
+  
 ];
 
 function ToolCard({ tool }: { tool: Tool }) {
@@ -114,6 +125,7 @@ export default function Home() {
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "0 1.5rem" }}>
         <Section title="Image Tools" tools={IMAGE_TOOLS} />
         <Section title="PDF Tools"   tools={PDF_TOOLS}   />
+        <Section title="Data & Code Tools" tools={DATA_TOOLS} />
       </div>
     </div>
   );

@@ -96,3 +96,22 @@ export async function watermarkPdf(file: File, opts: WatermarkPdfOpts): Promise<
   appendOpts(fd, opts);
   return postFile("/api/pdf/watermark", fd);
 }
+
+export type PdfTextResult = { text: string; pages: number };
+
+export async function extractPdfText(file: File): Promise<PdfTextResult> {
+  const fd = new FormData();
+  fd.append("file", file);
+  const res = await fetch("/api/pdf/to-text", { method: "POST", body: fd });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Request failed" }));
+    throw new Error(err.error ?? "Request failed");
+  }
+  return res.json() as Promise<PdfTextResult>;
+}
+
+export async function pdfToWord(file: File): Promise<FileResult> {
+  const fd = new FormData();
+  fd.append("file", file);
+  return postFile("/api/pdf/to-word", fd);
+}

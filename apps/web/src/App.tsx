@@ -19,6 +19,13 @@ import Metadata     from "./pages/pdf/Metadata";
 import RotatePages  from "./pages/pdf/RotatePages";
 import Protect      from "./pages/pdf/Protect";
 import PdfWatermark from "./pages/pdf/Watermark";
+import JsonFormatter  from "./pages/data/JsonFormatter";
+import JsonToCsv      from "./pages/data/JsonToCsv";
+import CsvToJson      from "./pages/data/CsvToJson";
+import JsonToXml      from "./pages/data/JsonToXml";
+import XmlToJson      from "./pages/data/XmlToJson";
+import PdfToText      from "./pages/pdf/PdfToText";
+import PdfToWord      from "./pages/pdf/PdfToWord";
 
 export default function App() {
   return (
@@ -43,6 +50,13 @@ export default function App() {
         <Route path="/pdf/rotate-pages"     element={<RotatePages />} />
         <Route path="/pdf/protect"          element={<Protect />} />
         <Route path="/pdf/watermark"        element={<PdfWatermark />} />
+        <Route path="/data/json-formatter" element={<JsonFormatter />} />
+        <Route path="/data/json-to-csv"    element={<JsonToCsv />} />
+        <Route path="/data/csv-to-json"    element={<CsvToJson />} />
+        <Route path="/data/json-to-xml"    element={<JsonToXml />} />
+        <Route path="/data/xml-to-json"    element={<XmlToJson />} />
+        <Route path="/pdf/to-text"         element={<PdfToText />} />
+        <Route path="/pdf/to-word" element={<PdfToWord />} />
       </Routes>
     </Layout>
   );
