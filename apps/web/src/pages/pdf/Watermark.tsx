@@ -34,7 +34,7 @@ export default function PdfWatermark() {
 
   return (
     <div style={pageWrap}>
-      <PageHeader icon="🔏" title="Watermark PDF" description="Add a diagonal text watermark across every page of a PDF." />
+      <PageHeader icon="🔏" title="Watermark PDF" description="Watermark on PDF free. Add a diagonal text watermark across every page of a PDF." />
       <DropZone files={file ? [file] : []} onFiles={f => setFile(f[0])} accept="application/pdf" />
       <div style={fieldStack}>
         <FormField label="Watermark Text">

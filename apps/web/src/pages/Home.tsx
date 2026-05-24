@@ -19,7 +19,7 @@ const PDF_TOOLS: Tool[] = [
   { icon: "📋", title: "PDF Metadata",    path: "/pdf/metadata",      description: "View title, author, page count, and creation date." },
   { icon: "🔃", title: "Rotate Pages",    path: "/pdf/rotate-pages",  description: "Rotate specific pages or the entire PDF." },
   { icon: "🔒", title: "Protect PDF",     path: "/pdf/protect",       description: "Password-protect a PDF to restrict access." },
-  { icon: "🔏", title: "Watermark PDF",   path: "/pdf/watermark",     description: "Add a diagonal text watermark across every page." },
+  { icon: "🔏", title: "Watermark PDF",   path: "/pdf/watermark",     description: "Add a water mark on PDF free. Add a diagonal text watermark across every page." },
   { icon: "📝", title: "PDF to Text",     path: "/pdf/to-text",         description: "Extract all text content from a PDF." },
   { icon: "📝", title: "PDF to Word", path: "/pdf/to-word", description: "Extract PDF text into a Word document." },
 ];
